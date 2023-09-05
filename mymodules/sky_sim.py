@@ -4,11 +4,45 @@
 """Module providing math functions and random generator"""
 from math import cos, pi
 from random import uniform
+import numpy as np
 
 NSRC = 1_000_000
 # from wikipedia
 RA_STR = '00:42:44.2'
 DEC_STR = '41:16:10'
+
+def crop_to_circle(ras, decs, ref_ra, ref_dec, radius):
+    """
+    Crop an input list of positions so that they lie within radius of
+    a reference position
+
+    Parameters
+    ----------
+    ras,decs : list(float)
+        The ra and dec in degrees of the data points
+    ref_ra, ref_dec: float
+        The reference location
+    radius: float
+        The radius in degrees
+    Returns
+    -------
+    ras, decs : list
+        A list of ra and dec coordinates that pass our filter.
+    """
+    ra_out = []
+    dec_out = []
+    for i in range(len(ras)):
+        if (ras[i]-ref_ra)**2 + (decs[i]-ref_dec)**2 < radius**2:
+            ra_out.append(ras[i])
+            dec_out.append(ras[i])
+    return ra_out, dec_out
+
+
+def make_positions(ra,dec, nsrc=NSRC):
+    ...
+    # apply our filter
+    ras, decs = crop_to_circle(ras,decs)
+    return ras, decs
 
 
 def make_positions():
